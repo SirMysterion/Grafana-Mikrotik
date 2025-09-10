@@ -2646,11 +2646,11 @@
               }
             ]
           },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "TX Sum"
-            },
+           {
+             "matcher": {
+               "id": "byName",
+               "options": "Total TX"
+             },
             "properties": [
               {
                 "id": "unit",
@@ -2678,11 +2678,11 @@
               }
             ]
           },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "RX Sum"
-            },
+           {
+             "matcher": {
+               "id": "byName",
+               "options": "Total RX"
+             },
             "properties": [
               {
                 "id": "unit",
@@ -2810,18 +2810,82 @@
               }
             ]
           },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Name"
-            },
-            "properties": [
-              {
-                "id": "custom.width"
-              }
-            ]
-          }
-        ]
+           {
+             "matcher": {
+               "id": "byName",
+               "options": "Name"
+             },
+             "properties": [
+               {
+                 "id": "custom.width"
+               }
+             ]
+           },
+           {
+             "matcher": {
+               "id": "byName",
+               "options": "RX Sum"
+             },
+             "properties": [
+               {
+                 "id": "unit",
+                 "value": "bytes"
+               },
+               {
+                 "id": "thresholds",
+                 "value": {
+                   "mode": "absolute",
+                   "steps": [
+                     {
+                       "color": "rgb(77, 79, 79)",
+                       "value": null
+                     },
+                     {
+                       "color": "super-light-yellow",
+                       "value": 1
+                     }
+                   ]
+                 }
+               },
+               {
+                 "id": "custom.width",
+                 "value": 118
+               }
+             ]
+           },
+           {
+             "matcher": {
+               "id": "byName",
+               "options": "TX Sum"
+             },
+             "properties": [
+               {
+                 "id": "unit",
+                 "value": "bytes"
+               },
+               {
+                 "id": "thresholds",
+                 "value": {
+                   "mode": "absolute",
+                   "steps": [
+                     {
+                       "color": "rgb(77, 79, 79)",
+                       "value": null
+                     },
+                     {
+                       "color": "super-light-yellow",
+                       "value": 1
+                     }
+                   ]
+                 }
+               },
+               {
+                 "id": "custom.width",
+                 "value": 118
+               }
+             ]
+           }
+         ]
       },
       "gridPos": {
         "h": 12,
@@ -2910,7 +2974,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "ifSpeed{instance='$instance'}",
+	  "expr": "(ifHighSpeed{instance='$instance'} * 1000000) or ifSpeed{instance='$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -2974,20 +3038,48 @@
           "legendFormat": "",
           "refId": "I"
         },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "exemplar": true,
-          "expr": "ifAlias{instance='$instance'}",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "J"
-        }
+         {
+           "datasource": {
+             "type": "prometheus",
+             "uid": "${DS_PROMETHEUS}"
+           },
+           "exemplar": true,
+           "expr": "ifAlias{instance='$instance'}",
+           "format": "table",
+           "hide": false,
+           "instant": true,
+           "interval": "",
+           "legendFormat": "",
+           "refId": "J"
+         },
+         {
+           "datasource": {
+             "type": "prometheus",
+             "uid": "${DS_PROMETHEUS}"
+           },
+           "exemplar": true,
+           "expr": "increase(mtxrInterfaceStatsRxBytes{instance='$instance'}[$__range])",
+           "format": "table",
+           "hide": false,
+           "instant": false,
+           "interval": "",
+           "legendFormat": "",
+           "refId": "K"
+         },
+         {
+           "datasource": {
+             "type": "prometheus",
+             "uid": "${DS_PROMETHEUS}"
+           },
+           "exemplar": true,
+           "expr": "increase(mtxrInterfaceStatsTxBytes{instance='$instance'}[$__range])",
+           "format": "table",
+           "hide": false,
+           "instant": false,
+           "interval": "",
+           "legendFormat": "",
+           "refId": "L"
+         }
       ],
       "title": "Interfaces",
       "transformations": [
@@ -3012,8 +3104,10 @@
               "Time 8": true,
               "Time 9": true,
               "Value #A": true,
-              "Value #H": true,
-              "Value #J": true,
+               "Value #H": true,
+               "Value #J": true,
+               "Value #K": false,
+               "Value #L": false,
               "__name__": true,
               "__name__ 1": true,
               "__name__ 2": true,
@@ -3056,38 +3150,42 @@
               "mtxrInterfaceStatsIndex 2": true,
               "mtxrInterfaceStatsIndex 3": true
             },
-            "indexByName": {
-              "Time": 12,
-              "Value #A": 16,
-              "Value #B": 3,
-              "Value #C": 8,
-              "Value #D": 9,
-              "Value #E": 6,
-              "Value #F": 4,
-              "Value #G": 7,
-              "Value #H": 11,
-              "Value #J": 18,
-              "__name__": 13,
-              "ifAlias": 10,
-              "ifIndex": 0,
-              "ifName": 2,
-              "ifPhysAddress": 5,
-              "ifType": 1,
-              "instance": 14,
-              "job": 15,
-              "mtxrInterfaceStatsIndex": 17
-            },
+             "indexByName": {
+               "Time": 14,
+               "Value #A": 18,
+               "Value #B": 2,
+               "Value #C": 7,
+               "Value #D": 8,
+               "Value #E": 5,
+               "Value #F": 3,
+               "Value #G": 6,
+               "Value #H": 13,
+               "Value #J": 11,
+               "Value #K": 9,
+               "Value #L": 10,
+               "__name__": 15,
+               "ifAlias": 11,
+               "ifIndex": 12,
+               "ifName": 0,
+               "ifPhysAddress": 4,
+               "ifType": 1,
+               "instance": 16,
+               "job": 17,
+               "mtxrInterfaceStatsIndex": 19
+             },
             "renameByName": {
               "Time": "",
               "Value #A": "",
               "Value #B": "Status link/states",
-              "Value #C": "RX Sum",
-              "Value #D": "TX Sum",
+              "Value #C": "Total RX",
+              "Value #D": "Total TX",
               "Value #E": "Rate",
               "Value #F": "Link down count",
               "Value #G": "MTU",
-              "Value #H": "",
-              "Value #J": "",
+               "Value #H": "",
+               "Value #J": "",
+               "Value #K": "RX Sum",
+               "Value #L": "TX Sum",
               "__name__": "",
               "ifAlias": "Comment",
               "ifIndex": "Int. index",
@@ -6372,54 +6470,9 @@
               }
             }
           ],
-          "type": "table"
-        }
-      ],
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "refId": "A"
-        }
-      ],
-      "title": "CAPsMAN",
-      "type": "row"
-    },
-    {
-      "collapsed": true,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 53
-      },
-      "id": 1705,
-      "panels": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "description": "",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "#299c46"
-                  }
-                ]
+      "type": "table"
+    }
+  ]
               },
               "unit": "none"
             },
